@@ -20,12 +20,11 @@ gem 'chartkick'
 gem 'httparty'
 gem 'groupdate'
 gem 'active_median'
+gem 'capistrano-rails', group: :development
 
-# Use Unicorn as the app server
-# gem 'unicorn'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+group :production do
+  gem 'unicorn'
+end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
