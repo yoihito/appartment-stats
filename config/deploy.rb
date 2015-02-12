@@ -2,7 +2,7 @@
 lock '3.3.5'
 
 set :application, 'appartments_stats'
-set :repo_url, ''
+set :repo_url, 'git@github.com:yoihito/appartment-stats.git'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
