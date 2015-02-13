@@ -20,7 +20,6 @@ gem 'chartkick'
 gem 'httparty'
 gem 'groupdate'
 gem 'active_median'
-gem 'capistrano-rails', group: :development
 
 group :production do
   gem 'unicorn'
@@ -32,6 +31,9 @@ group :development, :test do
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
   gem 'rspec-rails'
+  gem 'capistrano-rails'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rbenv'
   gem 'spring'
 end
 

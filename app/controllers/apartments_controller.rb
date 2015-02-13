@@ -8,9 +8,11 @@ class ApartmentsController < ApplicationController
       .order('date_trunc(\'day\',created_at)')
       .median(:price_usd)
       .reduce({}) { |res, apartment|
-        res[apartment[0][1]] = res[apartment[0][1]].nil? ? {apartment[0][0] => apartment[1]} : res[apartment[0][1]][apartment[0][0]] = apartment[1]
+        res[apartment[0][1]] = {} if res[apartment[0][1]].nil?
+        res[apartment[0][1]].store(apartment[0][0], apartment[1])
         res
-      }.flat_map {|z,a| [name: z, data: a]}
+      }
+      .flat_map {|z,a| [name: z, data: a]}
 
     puts @apartments_by_day.inspect
   end
