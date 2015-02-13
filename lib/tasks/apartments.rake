@@ -11,4 +11,9 @@ namespace :apartments do
     puts "#{Time.now} - success"
   end
 
+  task remove_duplicates: :environment do
+    connection = ActiveRecord::Base.connection
+    connection.execute(" DELETE FROM prices USING prices price2 WHERE prices.apartment_id = price2.apartment_id and date_trunc('day',prices.created_at)=date_trunc('day',price2.created_at) and prices.id < price2.id;")
+  end
+
 end

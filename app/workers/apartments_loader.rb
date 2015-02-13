@@ -54,16 +54,16 @@ class ApartmentsLoader
           price_usd: x['price']['usd'],
           price_byr: x['price']['byr'],
           apartment_id: x['id'],
-          created_at: Date.today
+          created_at: DateTime.current
         }
       }
     end
 
     def self.create_apartment(params, refresh)
-      unless refresh
+      if refresh
         apartment = Apartment.find_by(aid: params[:apartment][:aid])
         if apartment.present?
-          price = Price.where('date_trunc(\'day\' ,created_at) = ?',Date.today).where('apartment_id = ?', params[:apartment][:aid]).first
+          price = Price.where('date_trunc(\'day\' ,prices.created_at) = date_trunc(\'day\', date ?)',DateTime.current).where('apartment_id = ?', params[:apartment][:aid]).first
           if price.present?
             price.price_usd = params[:price][:price_usd]
             price.price_byr = params[:price][:price_byr]
