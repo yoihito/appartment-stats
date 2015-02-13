@@ -37,6 +37,8 @@ set :linked_dirs, fetch(:linked_dirs, []).push('bin', 'log', 'tmp/pids', 'tmp/ca
 # Default value for keep_releases is 5
 set :keep_releases, 5
 
+set :whenever_identifier, ->{ "#{fetch(:application)}_#{fetch(:stage)}" }
+
 after 'deploy:publishing', 'deploy:restart'
 namespace :deploy do
   task :restart do

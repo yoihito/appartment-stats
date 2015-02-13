@@ -20,6 +20,7 @@ gem 'chartkick'
 gem 'httparty'
 gem 'groupdate'
 gem 'active_median'
+gem 'whenever', :require => false
 
 group :production do
   gem 'unicorn'

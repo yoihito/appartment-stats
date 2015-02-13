@@ -5,6 +5,7 @@ require 'capistrano/setup'
 require 'capistrano/deploy'
 require 'capistrano/rails'
 require 'capistrano3/unicorn'
+require 'whenever/capistrano'
 
 
 # Include tasks from other gems included in your Gemfile
