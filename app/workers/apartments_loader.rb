@@ -1,42 +1,29 @@
+require 'date'
 class ApartmentsLoader
   include HTTParty
   base_uri 'https://ak.api.onliner.by'
 
-  def self.load_apartments
+  def self.fetch(refresh)
     current_size = 0
     page = 1
-    response = self.get('/search/apartments', {query: {
-      bounds: {
-        lb: {
-          lat: '53.50260276422582',
-          long: '27.081546144531224'
-          },
-        rt: {
-          lat: '54.29015300138517',
-          long: '28.042849855468734'
-        }
-      }}})
+    response = apartments_api
     loop do
-      parsed_response = JSON.parse(response.body)
-      apartments = parsed_response['apartments']
-      total = parsed_response['total']
+      apartments = response['apartments']
+      total = response['total']
       apartments.each do |x|
-        hash = {
-          aid: x['id'],
-          url: x['url'],
-          apart_type: x['rent_type'],
-          address: x['location']['address'],
-          longitude: x['location']['longitude'],
-          latitude: x['location']['latitude'],
-          price_usd: x['price']['usd'],
-          price_byr: x['price']['byr']
-        }
-        Apartment.create(hash)
+        create_apartment(hash_to_apartment_params(x), refresh)
         current_size += 1
       end
       break if current_size == total
       page += 1
-      response = self.get("/search/apartments", {query: {
+      response = apartments_api(page)
+    end
+  end
+
+  private
+
+    def self.apartments_api(page = nil)
+      query = {
         bounds: {
           lb: {
             lat: '53.50260276422582',
@@ -46,8 +33,66 @@ class ApartmentsLoader
             lat: '54.29015300138517',
             long: '28.042849855468734'
           }
-        }, page: page }})
+        }
+      }
+      query[:page] = page unless page.nil?
+      JSON.parse(self.get('/search/apartments', {query: query}).body)
     end
-  end
+
+    def self.hash_to_apartment_params(x)
+      puts x.inspect
+      {
+        apartment: {
+          aid: x['id'],
+          url: x['url'],
+          apart_type: x['rent_type'],
+          address: x['location']['address'],
+          longitude: x['location']['longitude'],
+          latitude: x['location']['latitude']
+        },
+        price: {
+          price_usd: x['price']['usd'],
+          price_byr: x['price']['byr'],
+          apartment_id: x['id'],
+          created_at: Date.today
+        }
+      }
+    end
+
+    def self.create_apartment(params, refresh)
+      unless refresh
+        apartment = Apartment.find_by(aid: params[:apartment][:aid])
+        if apartment.present?
+          price = Price.where('date_trunc(\'day\' ,created_at) = ?',Date.today).where('apartment_id = ?', params[:apartment][:aid]).first
+          if price.present?
+            price.price_usd = params[:price][:price_usd]
+            price.price_byr = params[:price][:price_byr]
+          else
+            price = Price.new(params[:price])
+          end
+          price.save
+        else
+          apartment = Apartment.new(params[:apartment])
+          price = Price.new(params[:price])
+          ActiveRecord::Base.transaction do
+            price.save
+            apartment.save
+          end
+        end
+      else
+        apartment = Apartment.find_by(aid: params[:apartment][:aid])
+        if apartment.present?
+          price = Price.create(params[:price])
+        else
+          apartment = Apartment.new(params[:apartment])
+          price = Price.new(params[:price])
+          ActiveRecord::Base.transaction do
+            price.save
+            apartment.save
+          end
+        end
+      end
+    end
 
 end
+

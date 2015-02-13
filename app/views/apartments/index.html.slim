@@ -1,5 +1,11 @@
 .average-price
-  = column_chart @apartments
+  = line_chart @apartments_number_by_day
 
 .average-price
-  = line_chart @apartments_by_day
+  = line_chart @apartments_price_by_day
+
+.average-price
+  = pie_chart @apartments_number_by_type
+
+.average-price
+  = column_chart @apartments_price_average

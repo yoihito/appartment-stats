@@ -41,4 +41,5 @@ end
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-highcharts'
+  gem 'rails-assets-leaflet'
 end
