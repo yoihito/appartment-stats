@@ -33,9 +33,7 @@ class ApartmentsLoader
         }
         Apartment.create(hash)
         current_size += 1
-        puts hash[:aid]
       end
-      puts current_size
       break if current_size == total
       page += 1
       response = self.get("/search/apartments", {query: {
