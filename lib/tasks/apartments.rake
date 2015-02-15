@@ -7,8 +7,10 @@ namespace :apartments do
 
   desc "Refresh prices"
   task refresh: :environment do
+    start = Time.now
     ApartmentsLoader.fetch(true)
     puts "#{Time.now} - success"
+    puts "Task is completed in #{Time.now - start}"
   end
 
   task remove_duplicates: :environment do

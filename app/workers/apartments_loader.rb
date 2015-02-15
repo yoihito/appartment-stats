@@ -40,7 +40,6 @@ class ApartmentsLoader
     end
 
     def self.hash_to_apartment_params(x)
-      puts x.inspect
       {
         apartment: {
           aid: x['id'],
@@ -63,20 +62,22 @@ class ApartmentsLoader
       if refresh
         apartment = Apartment.find_by(aid: params[:apartment][:aid])
         if apartment.present?
-          price = Price.where('date_trunc(\'day\' ,prices.created_at) = date_trunc(\'day\', date ?)',DateTime.current).where('apartment_id = ?', params[:apartment][:aid]).first
+          price = Price.where('date_trunc(\'day\' ,prices.created_at) = date_trunc(\'day\', date ?)',DateTime.current)
+                       .where('apartment_id = ?', params[:apartment][:aid]).first
           if price.present?
             price.price_usd = params[:price][:price_usd]
             price.price_byr = params[:price][:price_byr]
+            price.save
           else
             price = Price.new(params[:price])
-          end
-          price.save
-        else
-          apartment = Apartment.new(params[:apartment])
-          price = Price.new(params[:price])
-          ActiveRecord::Base.transaction do
             price.save
+          end
+        else
+          ActiveRecord::Base.transaction do
+            apartment = Apartment.new(params[:apartment])
             apartment.save
+            price = Price.new(params[:price])
+            price.save
           end
         end
       else
