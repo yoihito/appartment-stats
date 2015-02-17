@@ -11,6 +11,20 @@ class ApartmentsController < ApplicationController
         res
       }
       .flat_map {|z,a| [name: z, data: a]}
+    @apartments_price_delta_by_day = @apartments_price_by_day.map { |type|
+      {
+        name: type[:name],
+        data: type[:data].to_a.sort.reduce([]) { |res,val|
+          if res.empty?
+            res.push(val)
+          else
+            res[-1][1] = val[1] - res[-1][1]
+            res.push(val)
+          end
+          res
+        }.slice(0..-2)
+      }
+    }
     @apartments_number_by_type = Apartment.group(:apart_type).order('apart_type').count
     total = {}
     @apartments_number_by_day = Apartment.joins(:prices)
