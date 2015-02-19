@@ -1,16 +1,4 @@
 set :output, '../../shared/log/scheduler.log'
-every 1.day, at: '00:00 am' do
-  rake "apartments:refresh"
-end
-
-every 1.day, at: '08:00 am' do
-  rake "apartments:refresh"
-end
-
-every 1.day, at: '13:00 am' do
-  rake "apartments:refresh"
-end
-
-every 1.day, at: '19:00 am' do
+every 1.day, at: ['00:00 am', '08:00 am', '1:00 pm', '7:00 pm'] do
   rake "apartments:refresh"
 end
