@@ -11,20 +11,27 @@ class ApartmentsController < ApplicationController
       }
       .flat_map {|z,a| [name: z, data: a]}
 
-    @apartments_price_delta_by_day = @apartments_price_by_day.map { |type|
-      {
-        name: type[:name],
-        data: type[:data].to_a.sort.reduce([]) { |res,val|
-          if res.empty?
-            res.push(val)
-          else
-            res[-1][1] = val[1] - res[-1][1]
-            res.push(val)
-          end
-          res
-        }.slice(0..-2)
-      }
+    @apartments_median = Price.joins(:apartment)
+      .where('apartments.apart_type in (?)', ['1_room'])
+      .where('prices.created_at >= date_trunc(\'day\', date ?)',DateTime.current)
+      .group('prices.price_usd')
+      .order('prices.price_usd')
+      .count
+
+    current_bound = 0
+    step = 50
+    @apartments_median = @apartments_median.reduce({}) { |res, x|
+      if current_bound <= x[0] && x[0] <= current_bound + step
+        res[current_bound] = 0 if res[current_bound].nil?
+        res[current_bound] += x[1]
+      else
+        current_bound += step
+        res[current_bound] = 0 if res[current_bound].nil?
+        res[current_bound] += x[1]
+      end
+      res
     }
+
     @apartments_number_by_type = Apartment.where(apart_type: ['1_room','2_rooms']).group(:apart_type).order('apart_type').count
     total = {}
     @apartments_number_by_day = Apartment.where(apart_type: ['1_room','2_rooms']).joins(:prices)

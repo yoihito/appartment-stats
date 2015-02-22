@@ -62,7 +62,7 @@ class ApartmentsLoader
       if refresh
         apartment = Apartment.find_by(aid: params[:apartment][:aid])
         if apartment.present?
-          price = Price.where('date_trunc(\'day\' ,prices.created_at) = date_trunc(\'day\', date ?)',DateTime.current)
+          price = Price.where('prices.created_at >= date_trunc(\'day\', date ?)',DateTime.current)
                        .where('apartment_id = ?', params[:apartment][:aid]).first
           if price.present?
             price.price_usd = params[:price][:price_usd]

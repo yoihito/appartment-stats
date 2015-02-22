@@ -1,3 +1,3 @@
 Chartkick.options = {
-  height: "100%",
+  height: "100%"
 }
