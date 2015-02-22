@@ -2,7 +2,6 @@ class ApartmentsController < ApplicationController
   def index
     @apartments_price_by_day = Apartment.where(apart_type: ['1_room','2_rooms']).joins(:prices)
       .group('date_trunc(\'day\',prices.created_at)','apart_type')
-      .order('apart_type')
       .average('prices.price_usd')
       .reduce({}) { |res, apartment|
         res[apartment[0][1]] = {} if res[apartment[0][1]].nil?
@@ -36,7 +35,6 @@ class ApartmentsController < ApplicationController
     total = {}
     @apartments_number_by_day = Apartment.where(apart_type: ['1_room','2_rooms']).joins(:prices)
       .group('date_trunc(\'day\',prices.created_at)','apart_type')
-      .order('apart_type')
       .count
       .reduce({}) { |res, apartment|
         res[apartment[0][1]] = {} if res[apartment[0][1]].nil?
