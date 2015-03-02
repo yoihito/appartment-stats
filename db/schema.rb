@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150222122253) do
+ActiveRecord::Schema.define(version: 20150302082507) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,27 @@ ActiveRecord::Schema.define(version: 20150222122253) do
 
   add_index "apartments", ["aid"], name: "index_apartments_on_aid", using: :btree
   add_index "apartments", ["apart_type"], name: "index_apartments_on_apart_type", using: :btree
+
+  create_table "cities", force: :cascade do |t|
+    t.integer  "country_id"
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "countries", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "districts", force: :cascade do |t|
+    t.integer  "city_id"
+    t.string   "name"
+    t.json     "geojson"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "prices", force: :cascade do |t|
     t.integer  "apartment_id"

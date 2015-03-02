@@ -82,6 +82,11 @@ GEM
     execjs (2.3.0)
     globalid (0.3.3)
       activesupport (>= 4.1.0)
+    gon (5.2.3)
+      actionpack (>= 2.3.0)
+      json
+      multi_json
+      request_store (>= 1.0.5)
     groupdate (2.4.0)
       activesupport (>= 3)
     hike (1.2.3)
@@ -154,6 +159,7 @@ GEM
       polyamorous (~> 1.1)
     rdoc (4.2.0)
       json (~> 1.4)
+    request_store (1.1.0)
     rspec-core (3.2.0)
       rspec-support (~> 3.2.0)
     rspec-expectations (3.2.0)
@@ -240,6 +246,7 @@ DEPENDENCIES
   capistrano3-unicorn
   chartkick
   coffee-rails (~> 4.1.0)
+  gon
   groupdate
   httparty
   jbuilder (~> 2.0)

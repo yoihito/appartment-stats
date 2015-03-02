@@ -21,6 +21,7 @@ gem 'httparty'
 gem 'groupdate'
 gem 'active_median'
 gem 'whenever', :require => false
+gem 'gon'
 
 group :production do
   gem 'unicorn'

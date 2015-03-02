@@ -46,6 +46,7 @@ class ApartmentsController < ApplicationController
       .flat_map {|z,a| [name: z, data: a]}
       .push(name: 'total', data: total)
 
+    gon.districts_geojson = District.all.map {|x| x.geojson}
 
   end
 end
