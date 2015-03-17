@@ -41,6 +41,8 @@ group :development, :test do
 end
 
 source 'https://rails-assets.org' do
-  gem 'rails-assets-highcharts'
+  gem 'rails-assets-highcharts', '4.0.4'
   gem 'rails-assets-leaflet'
+  gem 'rails-assets-lodash'
+  gem 'rails-assets-leaflet.markercluster'
 end

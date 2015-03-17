@@ -46,7 +46,16 @@ class ApartmentsController < ApplicationController
       .flat_map {|z,a| [name: z, data: a]}
       .push(name: 'total', data: total)
 
-    gon.districts_geojson = District.all.map {|x| x.geojson}
+    gon.apartments_geojson = Apartment.where(apart_type: ['1_room', '2_rooms']).joins(:prices)
+      .where('prices.created_at >= date_trunc(\'day\', date ?)', DateTime.current).select('apartments.*, prices.price_usd as price_usd')
+      .map {|a|
+        {
+          type:"Point",
+          price_usd: a.price_usd,
+          coordinates: [a.longitude, a.latitude]
+        }
+      }
+    #gon.districts_geojson = District.all.map {|x| x.geojson}
 
   end
 end
