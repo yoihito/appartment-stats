@@ -47,7 +47,8 @@ class ApartmentsController < ApplicationController
       .push(name: 'total', data: total)
 
     gon.apartments_geojson = Apartment.where(apart_type: ['1_room', '2_rooms']).joins(:prices)
-      .where('prices.created_at >= date_trunc(\'day\', date ?)', DateTime.current).select('apartments.*, prices.price_usd as price_usd')
+      .where('prices.created_at >= date_trunc(\'day\', date ?)', DateTime.current)
+      .select('apartments.*, prices.price_usd as price_usd')
       .map {|a|
         {
           type:"Point",

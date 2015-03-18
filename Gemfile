@@ -38,6 +38,7 @@ group :development, :test do
   gem 'capistrano-rbenv'
   gem 'capistrano3-unicorn'
   gem 'spring'
+  gem 'quiet_assets'
 end
 
 source 'https://rails-assets.org' do

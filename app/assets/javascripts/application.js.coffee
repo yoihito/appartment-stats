@@ -32,11 +32,6 @@ window.onload = () ->
     iconCreateFunction: (cluster) ->
 
       childCount = cluster.getChildCount()
-      childs = cluster.getAllChildMarkers()
-      averagePrice = _.reduce(childs, (sum, child) ->
-          sum + child.feature.geometry.price_usd
-        , 0)
-      averagePrice = Math.round(averagePrice / childCount)
       c = ' marker-cluster-'
       if childCount < 10
         c += 'small'
@@ -45,7 +40,7 @@ window.onload = () ->
       else
         c += 'large'
 
-      new L.DivIcon({ html: '<div><span>' + childCount + '</span> <span>$'+averagePrice+'</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) })
+      new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) })
     )
 
   apartments = L.geoJson(
